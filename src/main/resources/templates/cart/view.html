@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: dynamic(~{::main})}">
+<body>
+    <main>
+        <div class="clean-card p-0 overflow-hidden mt-3">
+            <div class="p-4 border-bottom bg-light-clean">
+                <h5 class="m-0 fw-bold text-main">
+                    <i class="fas fa-shopping-bag me-2 text-primary-clean"></i> GIỎ HÀNG CỦA BẠN
+                </h5>
+            </div>
+            
+            <div class="p-4">
+                <div th:if="${cart.count == 0}" class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="fas fa-shopping-basket fa-4x text-muted opacity-25"></i>
+                    </div>
+                    <h5 class="text-muted fw-bold">Giỏ hàng của bạn đang trống</h5>
+                    <p class="text-muted small mb-4">Hãy dạo một vòng và chọn những món đồ yêu thích nhé!</p>
+                    <a href="/" class="btn btn-primary-clean">
+                        <i class="fas fa-arrow-left me-2"></i> MUA SẮM NGAY
+                    </a>
+                </div>
+
+                <div th:unless="${cart.count == 0}">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-4">
+                            <thead class="bg-light-clean">
+                                <tr>
+                                    <th class="py-3 ps-3">Sản phẩm</th>
+                                    <th class="py-3">Đơn giá</th>
+                                    <th class="py-3 text-center">Số lượng</th>
+                                    <th class="py-3">Thành tiền</th>
+                                    <th class="py-3 text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${cart.items}">
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-box text-muted me-3 fa-lg"></i>
+                                            <span class="fw-bold text-main">[[${item.name}]]</span>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="text-muted fw-bold">
+                                        [[${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                    </td>
+                                    
+                                    <td>
+                                        <form th:action="@{/cart/update}" method="post" class="d-flex justify-content-center">
+                                            <input type="hidden" name="id" th:value="${item.id}">
+                                            <input type="number" name="qty" th:value="${item.qty}" 
+                                                   onblur="this.form.submit()" min="1" 
+                                                   class="form-control form-control-sm text-center fw-bold" 
+                                                   style="width: 70px;">
+                                        </form>
+                                    </td>
+                                    
+                                    <td class="text-primary-clean fw-bold">
+                                        [[${#numbers.formatDecimal(item.price * item.qty, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <a th:href="@{|/cart/remove/${item.id}|}" class="btn btn-sm btn-outline-danger rounded-circle border-0" title="Xóa">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row align-items-center pt-3 border-top">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <a href="/" class="btn btn-outline-clean btn-sm rounded-pill">
+                                <i class="fas fa-arrow-left me-1"></i> Tiếp tục mua
+                            </a>
+                            <a href="/cart/clear" class="btn btn-light text-danger btn-sm rounded-pill ms-2 border">
+                                <i class="fas fa-trash-alt me-1"></i> Xóa hết
+                            </a>
+                        </div>
+                        <div class="col-md-6 text-md-end text-center">
+                            <div class="d-inline-block me-3 text-end align-middle">
+                                <span class="text-muted small d-block">Tổng thanh toán:</span>
+                                <span class="price-text fs-3">
+                                    [[${#numbers.formatDecimal(cart.amount, 0, 'COMMA', 0, 'POINT')}]] ₫
+                                </span>
+                            </div>
+                            <a href="/order/checkout" class="btn btn-accent-clean d-inline-block w-auto px-4 align-middle">
+                                THANH TOÁN <i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

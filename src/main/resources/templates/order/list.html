@@ -1,0 +1,90 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout :: dynamic(~{::main})}"
+>
+  <body>
+    <main>
+      <div class="clean-card p-0 overflow-hidden mt-3">
+        <div
+          class="p-4 border-bottom bg-light-clean d-flex justify-content-between align-items-center"
+        >
+          <h5 class="m-0 fw-bold text-main">
+            <i class="fas fa-history me-2 text-primary-clean"></i> LỊCH SỬ MUA
+            HÀNG
+          </h5>
+          <a href="/" class="btn btn-sm btn-outline-clean rounded-pill">
+            <i class="fas fa-plus me-1"></i> Mua thêm
+          </a>
+        </div>
+
+        <div class="p-4">
+          <div th:if="${#lists.isEmpty(orders)}" class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted opacity-25 mb-3"></i>
+            <p class="text-muted">Bạn chưa có đơn hàng nào cả.</p>
+            <a href="/" class="btn btn-primary-clean">Dạo phố công nghệ ngay</a>
+          </div>
+
+          <div th:unless="${#lists.isEmpty(orders)}" class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="bg-light">
+                <tr>
+                  <th class="py-3 ps-3">Mã ĐH</th>
+                  <th class="py-3">Ngày đặt</th>
+                  <th class="py-3">Địa chỉ nhận</th>
+                  <th class="py-3">Trạng thái</th>
+                  <th class="py-3 text-center">Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="o : ${orders}">
+                  <td class="ps-3 fw-bold text-primary-clean">#[[${o.id}]]</td>
+
+                  <td class="text-muted">
+                    <i class="far fa-calendar-alt me-1"></i> [[${o.createDate}]]
+                  </td>
+
+                  <td class="text-main text-truncate" style="max-width: 200px">
+                    [[${o.address}]]
+                  </td>
+
+                  <td>
+                    <span
+                      th:if="${o.status == 0}"
+                      class="badge bg-warning text-dark border border-warning"
+                    >
+                      <i class="fas fa-spinner fa-spin me-1"></i> Chờ xác nhận
+                    </span>
+                    <span
+                      th:if="${o.status == 1}"
+                      class="badge bg-info text-white"
+                      >Đang đóng gói</span
+                    >
+                    <span th:if="${o.status == 2}" class="badge bg-primary"
+                      >Đang giao</span
+                    >
+                    <span th:if="${o.status == 3}" class="badge bg-success"
+                      >Hoàn thành</span
+                    >
+                    <span th:if="${o.status == 4}" class="badge bg-danger"
+                      >Đã hủy</span
+                    >
+                  </td>
+
+                  <td class="text-center">
+                    <a
+                      th:href="@{|/order/detail/${o.id}|}"
+                      class="btn btn-sm btn-outline-clean rounded-pill px-3"
+                    >
+                      Xem
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

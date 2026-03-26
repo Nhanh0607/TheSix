@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: dynamic(~{::main})}">
+<body>
+    <main>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-5 col-lg-4">
+                <div class="clean-card p-5">
+                    <h3 class="text-center text-primary-clean mb-4 fw-bold">
+                        QUÊN MẬT KHẨU
+                    </h3>
+                    
+                    <div th:if="${message != null}" class="alert alert-info mb-3">
+                        [[${message}]]
+                    </div>
+
+                    <form action="/auth/forgot" method="post">
+                        <p class="text-muted small text-center mb-4">
+                            Nhập địa chỉ email bạn đã dùng để đăng ký. Chúng tôi sẽ gửi mật khẩu mới cho bạn.
+                        </p>
+                        
+                        <div class="mb-4">
+                            <label class="text-muted small mb-1 fw-bold">Email đăng ký</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                        
+                        <button class="btn btn-primary-clean w-100 mb-3">
+                            <i class="fas fa-paper-plane me-2"></i> GỬI MẬT KHẨU
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="/auth/login" class="text-muted small text-decoration-none hover-primary">
+                            <i class="fas fa-arrow-left me-1"></i> Quay lại Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(main)">
+<head>
+    <meta charset="utf-8">
+    <title>J5 Admin Control</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* CSS riêng cho Admin Sidebar */
+        .sidebar {
+            min-height: 100vh;
+            background: rgba(15, 23, 42, 0.9);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .sidebar-link {
+            color: #cbd5e1;
+            padding: 12px 20px;
+            display: block;
+            text-decoration: none;
+            transition: 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(6, 182, 212, 0.1);
+            color: #06b6d4;
+            padding-left: 25px; /* Hiệu ứng trượt sang phải */
+        }
+        .admin-content {
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="sidebar p-3 d-none d-md-block" style="width: 280px;">
+            <a href="/admin/index" class="d-flex align-items-center mb-4 text-decoration-none text-white">
+                <i class="fas fa-user-shield fa-2x text-info me-2"></i>
+                <span class="fs-4 fw-bold" style="font-family: 'Orbitron'">ADMIN CP</span>
+            </a>
+            <hr class="text-secondary">
+            
+            <div class="nav flex-column">
+                <small class="text-secondary text-uppercase mb-2 fw-bold" style="font-size: 0.75rem;">Tổng quan</small>
+                <a href="/admin/index" class="sidebar-link active"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+                
+                <small class="text-secondary text-uppercase mt-3 mb-2 fw-bold" style="font-size: 0.75rem;">Quản lý</small>
+                <a href="/admin/product/index" class="sidebar-link"><i class="fas fa-box me-2"></i> Sản phẩm</a>
+                <a href="/admin/category/index" class="sidebar-link"><i class="fas fa-tags me-2"></i> Loại hàng</a>
+                <a href="/admin/order/index" class="sidebar-link"><i class="fas fa-shopping-bag me-2"></i> Đơn hàng</a>
+                <a href="/admin/account/index" class="sidebar-link"><i class="fas fa-users me-2"></i> Khách hàng</a>
+                
+                <small class="text-secondary text-uppercase mt-3 mb-2 fw-bold" style="font-size: 0.75rem;">Hệ thống</small>
+                <a href="/" class="sidebar-link"><i class="fas fa-globe me-2"></i> Xem trang chủ</a>
+                <a href="/auth/logout" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a>
+            </div>
+        </div>
+
+        <div class="flex-grow-1 bg-dark" style="min-height: 100vh;">
+            <nav class="navbar navbar-dark bg-dark d-md-none border-bottom border-secondary">
+                <div class="container-fluid">
+                    <span class="navbar-brand">Admin Control</span>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+            
+            <div class="admin-content text-white">
+                <div th:replace="${main}"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

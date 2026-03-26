@@ -1,0 +1,190 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{admin/layout :: dynamic(~{::main})}"
+>
+  <body>
+    <main>
+      <h3 class="fw-bold text-main mb-4">QUẢN LÝ KHÁCH HÀNG</h3>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="clean-card h-auto">
+            <h5 class="text-primary-clean fw-bold mb-3 border-bottom pb-2">
+              Thông tin tài khoản
+            </h5>
+            <div th:if="${message != null}" class="alert alert-info mb-3 small">
+              [[${message}]]
+            </div>
+
+            <form
+              th:action="@{/admin/account/index}"
+              method="post"
+              th:object="${item}"
+              enctype="multipart/form-data"
+            >
+              <div class="text-center mb-3">
+                <img
+                  th:src="@{|/images/*{photo}|}"
+                  class="rounded-circle border shadow-sm"
+                  style="width: 80px; height: 80px; object-fit: cover"
+                  onerror="this.src = 'https://placehold.co/80x80?text=User'"
+                />
+                <div class="mt-2 text-start">
+                  <label class="fw-bold small text-dark">Ảnh đại diện</label>
+                  <input
+                    type="file"
+                    name="photo_file"
+                    class="form-control form-control-sm"
+                  />
+                  <input type="hidden" th:field="*{photo}" />
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark"
+                  >Tên đăng nhập (Username)</label
+                >
+                <input
+                  type="text"
+                  th:field="*{username}"
+                  class="form-control"
+                  th:readonly="${item.username!=null}"
+                  placeholder="Nhập username..."
+                />
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Họ và tên</label>
+                <input
+                  type="text"
+                  th:field="*{fullname}"
+                  class="form-control"
+                  required
+                  placeholder="Nhập họ tên..."
+                />
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Địa chỉ Email</label>
+                <input
+                  type="email"
+                  th:field="*{email}"
+                  class="form-control"
+                  required
+                  placeholder="name@example.com"
+                />
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Mật khẩu</label>
+                <input
+                  type="password"
+                  th:field="*{password}"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="d-block fw-bold small text-dark">Vai trò</label>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    th:field="*{admin}"
+                    value="false"
+                  />
+                  <label class="form-check-label text-dark">User</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    th:field="*{admin}"
+                    value="true"
+                  />
+                  <label class="form-check-label text-danger fw-bold"
+                    >Admin</label
+                  >
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <div class="d-flex gap-2">
+                  <button
+                    th:formaction="@{/admin/account/create}"
+                    class="btn btn-primary-clean flex-fill"
+                  >
+                    Thêm
+                  </button>
+                  <button
+                    th:formaction="@{/admin/account/update}"
+                    class="btn btn-outline-clean flex-fill"
+                  >
+                    Lưu
+                  </button>
+                </div>
+                <div class="d-flex gap-2">
+                  <a
+                    th:if="${item.username != null}"
+                    th:href="@{|/admin/account/delete/${item.username}|}"
+                    class="btn btn-danger flex-fill"
+                    onclick="return confirm('Xóa?');"
+                    >Xóa</a
+                  >
+                  <a
+                    href="/admin/account/reset"
+                    class="btn btn-light border flex-fill"
+                    >Mới</a
+                  >
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="clean-card h-100 p-0">
+            <div class="p-3 border-bottom">
+              <h5 class="m-0 fw-bold text-dark">Danh sách thành viên</h5>
+            </div>
+            <div class="table-responsive" style="max-height: 550px">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light-clean sticky-top">
+                  <tr>
+                    <th>User</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="u:${items}">
+                    <td class="fw-bold text-primary">[[${u.username}]]</td>
+                    <td>[[${u.fullname}]]</td>
+                    <td class="small">[[${u.email}]]</td>
+                    <td>
+                      <span th:if="${u.admin}" class="badge bg-danger"
+                        >Admin</span
+                      ><span th:unless="${u.admin}" class="badge bg-secondary"
+                        >User</span
+                      >
+                    </td>
+                    <td>
+                      <a
+                        th:href="@{|/admin/account/edit/${u.username}|}"
+                        class="btn btn-sm btn-light border rounded-circle"
+                        ><i class="fas fa-pen text-primary"></i
+                      ></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

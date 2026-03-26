@@ -1,0 +1,183 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{admin/layout :: dynamic(~{::main})}"
+>
+  <body>
+    <main>
+      <h3 class="fw-bold text-main mb-4">QUẢN LÝ ĐƠN HÀNG</h3>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="clean-card h-auto">
+            <h5 class="text-primary-clean fw-bold mb-3 border-bottom pb-2">
+              Thông tin đơn hàng
+            </h5>
+
+            <div th:if="${message != null}" class="alert alert-info mb-3 small">
+              <i class="fas fa-info-circle me-1"></i> [[${message}]]
+            </div>
+
+            <form
+              th:action="@{/admin/order/index}"
+              method="post"
+              th:object="${item}"
+            >
+              <div class="row mb-2">
+                <div class="col-6">
+                  <label class="fw-bold small text-dark">Mã ĐH</label>
+                  <input
+                    type="text"
+                    th:field="*{id}"
+                    class="form-control bg-light"
+                    readonly
+                    placeholder="Auto"
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="fw-bold small text-dark">Người đặt</label>
+                  <input
+                    type="text"
+                    class="form-control bg-light"
+                    disabled
+                    th:value="${item.account != null ? item.account.username : ''}"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Ngày đặt</label>
+                <input
+                  type="text"
+                  class="form-control bg-light"
+                  disabled
+                  th:value="${item.createDate != null ? #dates.format(item.createDate, 'dd-MM-yyyy HH:mm') : ''}"
+                />
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Địa chỉ nhận hàng</label>
+                <input type="text" th:field="*{address}" class="form-control" />
+              </div>
+
+              <div class="mb-2">
+                <label class="fw-bold small text-dark">Số điện thoại</label>
+                <input type="text" th:field="*{phone}" class="form-control" />
+              </div>
+
+              <div class="mb-3">
+                <label class="fw-bold small text-dark text-primary"
+                  >Trạng thái đơn hàng</label
+                >
+                <select
+                  th:field="*{status}"
+                  class="form-select border-primary fw-bold text-primary"
+                >
+                  <option value="0">Chờ xác nhận</option>
+                  <option value="1">Đang đóng gói</option>
+                  <option value="2">Đang giao</option>
+                  <option value="3">Hoàn thành</option>
+                  <option value="4">Đã hủy</option>
+                </select>
+              </div>
+
+              <div
+                class="mb-3 bg-light p-2 rounded border"
+                th:if="${details != null and !details.isEmpty()}"
+              >
+                <label class="fw-bold small text-dark">Sản phẩm đã đặt:</label>
+                <ul class="list-group list-group-flush mt-1 small">
+                  <li
+                    class="list-group-item bg-transparent text-dark"
+                    th:each="d : ${details}"
+                  >
+                    <span class="fw-bold">[[${d.product.name}]]</span>
+                    x [[${d.quantity}]] =
+                    <span class="text-danger"
+                      >[[${#numbers.formatDecimal(d.price * d.quantity, 0,
+                      'COMMA', 0, 'POINT')}]] ₫</span
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button
+                  th:formaction="@{/admin/order/update}"
+                  class="btn btn-primary-clean"
+                >
+                  Cập nhật Đơn hàng
+                </button>
+                <a href="/admin/order/reset" class="btn btn-light border"
+                  >Mới / Quay lại</a
+                >
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="clean-card h-100 p-0 overflow-hidden">
+            <div class="p-3 border-bottom d-flex justify-content-between">
+              <h5 class="m-0 fw-bold text-dark">Danh sách đơn hàng</h5>
+              <span class="badge bg-light text-dark border"
+                >[[${items.size()}]] đơn</span
+              >
+            </div>
+            <div class="table-responsive" style="max-height: 600px">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light-clean sticky-top">
+                  <tr>
+                    <th>Mã ĐH</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Trạng thái</th>
+                    <th>Sửa</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="o:${items}">
+                    <td class="fw-bold text-primary">#[[${o.id}]]</td>
+                    <td>[[${o.account.username}]]</td>
+                    <td class="small">
+                      [[${o.createDate != null ? #dates.format(o.createDate,
+                      'dd-MM-yyyy') : ''}]]
+                    </td>
+                    <td>
+                      <span
+                        th:if="${o.status == 0}"
+                        class="badge bg-warning text-dark"
+                        >Chờ xác nhận</span
+                      >
+                      <span
+                        th:if="${o.status == 1}"
+                        class="badge bg-info text-white"
+                        >Đang đóng gói</span
+                      >
+                      <span th:if="${o.status == 2}" class="badge bg-primary"
+                        >Đang giao</span
+                      >
+                      <span th:if="${o.status == 3}" class="badge bg-success"
+                        >Hoàn thành</span
+                      >
+                      <span th:if="${o.status == 4}" class="badge bg-danger"
+                        >Đã hủy</span
+                      >
+                    </td>
+                    <td>
+                      <a
+                        th:href="@{|/admin/order/edit/${o.id}|}"
+                        class="btn btn-sm btn-light border rounded-circle"
+                      >
+                        <i class="fas fa-pen text-primary"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

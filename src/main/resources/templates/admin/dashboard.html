@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/layout :: dynamic(~{::main})}">
+<body>
+    <main>
+        <h2 class="mb-4 fw-bold" style="font-family: 'Orbitron'">DASHBOARD</h2>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-secondary mb-1">Tổng sản phẩm</p>
+                        <h3 class="fw-bold text-white mb-0">[[${prodCount}]]</h3>
+                    </div>
+                    <div class="bg-primary bg-opacity-25 p-3 rounded-circle text-primary">
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-secondary mb-1">Tổng đơn hàng</p>
+                        <h3 class="fw-bold text-white mb-0">[[${orderCount}]]</h3>
+                    </div>
+                    <div class="bg-warning bg-opacity-25 p-3 rounded-circle text-warning">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-secondary mb-1">Khách hàng</p>
+                        <h3 class="fw-bold text-white mb-0">[[${userCount}]]</h3>
+                    </div>
+                    <div class="bg-info bg-opacity-25 p-3 rounded-circle text-info">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card p-4">
+            <h5 class="text-white mb-3">Hoạt động gần đây</h5>
+            <div class="alert alert-info bg-opacity-10 border-info text-info">
+                <i class="fas fa-info-circle me-2"></i> Chào mừng trở lại, Admin! Hệ thống đang hoạt động ổn định.
+            </div>
+            <p class="text-muted text-center py-5">
+                (Khu vực này có thể phát triển thêm biểu đồ doanh thu hoặc danh sách đơn hàng mới nhất)
+            </p>
+        </div>
+    </main>
+</body>
+</html>

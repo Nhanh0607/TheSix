@@ -1,0 +1,226 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{admin/layout :: dynamic(~{::main})}"
+>
+  <body>
+    <main>
+      <h3 class="fw-bold text-main mb-4">QUẢN LÝ KHÁCH HÀNG</h3>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="clean-card h-auto">
+            <h5 class="text-primary-clean fw-bold mb-3 border-bottom pb-2">
+              <i class="fas fa-user-edit me-2"></i> Thông tin tài khoản
+            </h5>
+
+            <div th:if="${message != null}" class="alert alert-info mb-3 small">
+              <i class="fas fa-info-circle me-1"></i> [[${message}]]
+            </div>
+
+            <form
+              th:action="@{/admin/account/index}"
+              method="post"
+              th:object="${item}"
+            >
+              <div class="text-center mb-4">
+                <div class="d-inline-block position-relative">
+                  <img
+                    th:src="@{|/images/*{photo}|}"
+                    class="rounded-circle border border-3 border-light shadow-sm"
+                    style="width: 100px; height: 100px; object-fit: cover"
+                    onerror="
+                      this.src =
+                        'https://placehold.co/100x100/f1f5f9/64748b?text=User'
+                    "
+                  />
+                </div>
+                <div class="mt-2">
+                  <label class="text-muted small fw-bold">Tên ảnh</label>
+                  <input
+                    type="text"
+                    th:field="*{photo}"
+                    class="form-control form-control-sm text-center"
+                    placeholder="user.png"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="text-muted small fw-bold">Username</label>
+                <input
+                  type="text"
+                  th:field="*{username}"
+                  class="form-control"
+                  placeholder="Tên đăng nhập"
+                  th:readonly="${item.username != null}"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="text-muted small fw-bold">Họ và tên</label>
+                <input
+                  type="text"
+                  th:field="*{fullname}"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="text-muted small fw-bold">Email</label>
+                <input
+                  type="email"
+                  th:field="*{email}"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="text-muted small fw-bold">Mật khẩu</label>
+                <input
+                  type="password"
+                  th:field="*{password}"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label class="text-muted small fw-bold d-block"
+                  >Trạng thái</label
+                >
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    th:field="*{activated}"
+                    value="true"
+                    checked
+                  />
+                  <label class="form-check-label text-success fw-bold"
+                    >Kích hoạt</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    th:field="*{activated}"
+                    value="false"
+                  />
+                  <label class="form-check-label text-danger fw-bold"
+                    >Khóa</label
+                  >
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <div class="d-flex gap-2">
+                  <button
+                    th:formaction="@{/admin/account/create}"
+                    class="btn btn-primary-clean flex-fill"
+                  >
+                    <i class="fas fa-plus"></i> Thêm
+                  </button>
+                  <button
+                    th:formaction="@{/admin/account/update}"
+                    class="btn btn-outline-clean flex-fill"
+                  >
+                    <i class="fas fa-save"></i> Lưu
+                  </button>
+                </div>
+                <div class="d-flex gap-2">
+                  <a
+                    th:if="${item.username != null}"
+                    th:href="@{|/admin/account/delete/${item.username}|}"
+                    class="btn btn-danger flex-fill"
+                    style="border-radius: 12px; font-weight: 600"
+                    onclick="return confirm('Bạn chắc chắn muốn xóa?');"
+                  >
+                    <i class="fas fa-trash"></i> Xóa
+                  </a>
+                  <a
+                    href="/admin/account/reset"
+                    class="btn btn-light border flex-fill"
+                    style="border-radius: 12px; font-weight: 600"
+                  >
+                    <i class="fas fa-redo"></i> Reset
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="clean-card h-100 p-0 overflow-hidden">
+            <div
+              class="p-3 border-bottom d-flex justify-content-between align-items-center"
+            >
+              <h5 class="text-main fw-bold m-0">
+                <i class="fas fa-users me-2 text-primary-clean"></i> Danh sách
+                thành viên
+              </h5>
+              <span class="badge bg-light text-dark border"
+                >[[${items.size()}]] users</span
+              >
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light-clean">
+                  <tr>
+                    <th class="ps-3">Username</th>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Sửa</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="acc : ${items}">
+                    <td class="ps-3 fw-bold text-primary-clean">
+                      [[${acc.username}]]
+                    </td>
+                    <td>
+                      <div class="fw-bold text-main">[[${acc.fullname}]]</div>
+                      <small
+                        class="text-danger fw-bold"
+                        th:if="${acc.isAdmin()}"
+                        >ADMIN</small
+                      >
+                    </td>
+                    <td class="text-muted small">[[${acc.email}]]</td>
+                    <td>
+                      <span
+                        th:if="${acc.activated}"
+                        class="badge bg-success bg-opacity-10 text-success border border-success"
+                        >Active</span
+                      >
+                      <span
+                        th:unless="${acc.activated}"
+                        class="badge bg-danger bg-opacity-10 text-danger border border-danger"
+                        >Locked</span
+                      >
+                    </td>
+                    <td class="text-center">
+                      <a
+                        th:href="@{'/admin/account/edit/' + ${acc.username}}"
+                        class="btn btn-sm btn-light border text-primary-clean rounded-circle shadow-sm"
+                        style="width: 32px; height: 32px; line-height: 20px"
+                      >
+                        <i class="fas fa-pen small"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

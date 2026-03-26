@@ -1,0 +1,224 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(main)">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>THE SIX - Hiện đại & Tinh tế</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <i class="fas fa-laptop-code me-2 text-primary-clean"></i> THE SIX
+          STORE
+        </a>
+
+        <button
+          class="navbar-toggler border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <li class="nav-item">
+              <a class="nav-link active" href="/">Trang chủ</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+                >Sản phẩm</a
+              >
+              <ul class="dropdown-menu shadow-sm border-0 mt-2">
+                <li th:each="c:${cates}">
+                  <a
+                    class="dropdown-item"
+                    th:href="@{|/product/list?cid=${c.id}|}"
+                    >[[${c.name}]]</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+          </ul>
+
+          <div class="d-flex gap-3 align-items-center mt-3 mt-lg-0">
+            <a
+              href="/cart/view"
+              class="btn btn-outline-clean position-relative rounded-circle p-2 d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-shopping-bag"></i>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white"
+              >
+                [[${@cartServiceImpl.count}]]
+              </span>
+            </a>
+
+            <div th:if="${session.user == null}">
+              <a
+                href="/auth/login"
+                class="btn btn-primary-clean rounded-pill px-4"
+              >
+                Đăng nhập
+              </a>
+            </div>
+
+            <div th:if="${session.user != null}" class="dropdown">
+              <a
+                class="btn btn-light bg-light-clean rounded-pill px-3 dropdown-toggle d-flex align-items-center gap-2 border-0 shadow-sm"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <img
+                  th:src="@{|/images/${session.user.photo}|}"
+                  class="rounded-circle"
+                  width="28"
+                  height="28"
+                  style="object-fit: cover"
+                  onerror="this.src = 'https://placehold.co/30x30?text=U'"
+                />
+                <span class="fw-bold text-main small"
+                  >[[${session.user.fullname}]]</span
+                >
+              </a>
+
+              <ul
+                class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2"
+              >
+                <li>
+                  <a class="dropdown-item" href="/order/list"
+                    ><i class="fas fa-receipt me-2 text-muted"></i> Đơn hàng</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/account/profile"
+                    ><i class="fas fa-user-cog me-2 text-muted"></i> Tài
+                    khoản</a
+                  >
+                </li>
+
+                <li th:if="${session.user.isAdmin()}">
+                  <hr class="dropdown-divider" />
+                </li>
+                <li th:if="${session.user.isAdmin()}">
+                  <a
+                    class="dropdown-item fw-bold text-primary-clean"
+                    href="/admin/index"
+                  >
+                    <i class="fas fa-shield-alt me-2"></i> Quản trị viên
+                  </a>
+                </li>
+
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="/auth/logout"
+                    ><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4 mb-5" style="min-height: 80vh">
+      <div th:replace="${main}"></div>
+    </div>
+
+    <footer class="bg-white text-muted pt-5 pb-4 mt-5 border-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-md-4">
+            <h5 class="text-main fw-bold mb-3">
+              <i class="fas fa-laptop-code me-2 text-primary-clean"></i> The Six
+              STORE
+            </h5>
+            <p class="small">
+              Mang đến những sản phẩm công nghệ tốt nhất với trải nghiệm mua sắm
+              tuyệt vời nhất.
+            </p>
+          </div>
+          <div class="col-md-2 col-6">
+            <h6 class="text-main fw-bold mb-3">Mua hàng</h6>
+            <ul class="list-unstyled small d-flex flex-column gap-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-decoration-none text-muted hover-primary"
+                  >Thanh toán</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-decoration-none text-muted hover-primary"
+                  >Giao hàng</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 col-6">
+            <h6 class="text-main fw-bold mb-3">Hỗ trợ</h6>
+            <ul class="list-unstyled small d-flex flex-column gap-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-decoration-none text-muted hover-primary"
+                  >Chính sách đổi trả</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-decoration-none text-muted hover-primary"
+                  >Bảo hành</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-main fw-bold mb-3">Kết nối với chúng tôi</h6>
+            <div class="d-flex gap-3 fs-5">
+              <a href="#" class="text-muted hover-primary"
+                ><i class="fab fa-facebook"></i
+              ></a>
+              <a href="#" class="text-muted hover-primary"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-muted hover-primary"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <hr class="my-4" />
+        <div class="text-center small">
+          &copy; 2026 The Six Store. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/shopping-cart-app.js}"></script>
+  </body>
+</html>

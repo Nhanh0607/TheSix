@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: dynamic(~{::main})}">
+<body>
+    <main>
+        <div class="p-5 mb-5 rounded-3 text-center position-relative overflow-hidden" 
+             style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(255,255,255,0.1);">
+            <div class="position-relative z-1">
+                <h1 class="display-5 fw-bold text-white mb-2" style="font-family: 'Orbitron'; text-shadow: 0 0 15px rgba(6,182,212,0.6);">
+                    CYBER TECH ZONE
+                </h1>
+                <p class="text-light opacity-75">Khám phá công nghệ tương lai ngay hôm nay.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="sidebar-glass sticky-top" style="top: 100px; z-index: 1;">
+                    <div class="p-3 bg-dark bg-opacity-50 text-white border-bottom border-secondary">
+                        <h5 class="m-0 fw-bold"><i class="fas fa-bars me-2 text-info"></i> DANH MỤC</h5>
+                    </div>
+                    
+                    <a href="/product/list" class="category-link" th:classappend="${cid == null} ? 'active' : ''">
+                        <i class="fas fa-layer-group me-2"></i> Tất cả sản phẩm
+                    </a>
+                    
+                    <a th:each="c : ${cates}" 
+                       th:href="@{|/product/list?cid=${c.id}|}"
+                       class="category-link" 
+                       th:classappend="${cid == c.id} ? 'active' : ''">
+                        <i class="fas fa-microchip me-2 small opacity-50"></i> [[${c.name}]]
+                    </a>
+                </div>
+
+                <div class="mt-4 glass-card p-3 text-center border-warning">
+                    <i class="fas fa-truck-fast fa-3x text-warning mb-2"></i>
+                    <h6 class="text-white">FREESHIP</h6>
+                    <small class="text-muted">Cho đơn từ 500k</small>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="text-white border-start border-4 border-info ps-3 m-0" style="font-family: 'Orbitron'">
+                        <span th:if="${cid == null}">TẤT CẢ SẢN PHẨM</span>
+                        <span th:if="${cid != null}">LỌC THEO: [[${cid}]]</span>
+                    </h4>
+                    <div class="text-muted small">
+                        Hiển thị [[${page.numberOfElements}]] / [[${page.totalElements}]] sản phẩm
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div th:each="p: ${items}" class="col">
+                        <div class="glass-card h-100">
+                            <div class="product-img-box">
+                                <a th:href="@{|/product/detail/${p.id}|}">
+                                    <img th:src="@{|/images/${p.image}|}" alt="Product"
+                                         onerror="this.src='https://placehold.co/300x300/1e293b/FFF?text=J5+Shop'">
+                                </a>
+                            </div>
+                            
+                            <div class="mt-2 d-flex flex-column flex-grow-1">
+                                <div class="mb-2">
+                                    <span class="badge-tech">[[${p.category.name}]]</span>
+                                </div>
+                                <h5 class="card-title text-truncate mb-3">
+                                    <a th:href="@{|/product/detail/${p.id}|}" class="text-white text-decoration-none hover-neon">
+                                        [[${p.name}]]
+                                    </a>
+                                </h5>
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="price-text">[[${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}]] ₫</span>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button th:attr="onclick=|addToCart('${p.id}')|" class="btn btn-neon btn-sm">
+                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 d-flex justify-content-center" th:if="${page.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                                <a class="page-link" th:href="@{|/product/list?p=0${cid!=null ? '&cid='+cid : ''}|}">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                                th:classappend="${page.number == i} ? 'active'">
+                                <a class="page-link" th:href="@{|/product/list?p=${i}${cid!=null ? '&cid='+cid : ''}|}">
+                                    [[${i + 1}]]
+                                </a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                                <a class="page-link" th:href="@{|/product/list?p=${page.totalPages - 1}${cid!=null ? '&cid='+cid : ''}|}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+</body>
+</html>
